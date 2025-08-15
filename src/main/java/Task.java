@@ -20,4 +20,9 @@ public class Task {
         return (isDone ? "X" : " ");
     }
 
+    @Override
+    public String toString() {
+        return String.format("[%s] %s", getCompletionStatus(), description);
+    }
+
 }

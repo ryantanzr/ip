@@ -33,11 +33,8 @@ public class Kronos {
 
             // Start a for loop to print out the stored text
             for (int index = 0; index < counter; ++index) {
-
-                String taskDescription = storage[index].getDescription();
-                String taskStatus = storage[index].getCompletionStatus();
-
-                storedText += String.format("%d.[%s] %s \n", index + 1, taskStatus, taskDescription);
+                storedText += String.format("%d.", index + 1);
+                storedText += storage[index].toString() + "\n";
             }
             System.out.println(storedText + divider);
 
@@ -85,12 +82,52 @@ public class Kronos {
 
         } else {
 
-            // Assign the content to a variable with a more fitting name
-            String taskDescription = keyword;
+            // Determine the task type based on the first word
+            String taskType = requestComponents[0];
+            String description = "";
+            Task newTask = null;
 
-            // Store the text and increment the counter
-            storage[counter++] = new Task(taskDescription);
-            System.out.println(divider + "added: "+ request + "\n" + divider);
+            switch (taskType) {
+                case "todo":
+                    // Extract the description from the request
+                    description = request.substring(5).trim();
+
+                    // Create a new ToDo task
+                    newTask = new ToDo(description);
+                    break;
+                case "deadline":
+                    // Split the request to get the description and by date
+                    String[] deadlineComponents = request.split("/by");
+                    
+                    // Extract the by date from the request and description
+                    String byDate = deadlineComponents[1].trim();
+                    description = deadlineComponents[0].substring(9).trim();
+                    
+                    // Create a new Deadline task
+                    newTask = new Deadline(description, byDate);
+                    break;
+                case "event":
+                    // Split the request to get the description, start and end dates
+                    String[] eventComponents = request.split("/from|/to");
+                    
+                    // Extract the start and end dates from the request
+                    String startDate = eventComponents[1].trim();
+                    String endDate = eventComponents[2].trim();
+
+                    // Extract the description from the request
+                    description = eventComponents[0].substring(6).trim();
+
+                    // Create a new Event task
+                    newTask = new Event(description, startDate, endDate);
+                    break;
+            }
+
+            // Store the new task in the storage array
+            storage[counter++] = newTask;
+
+            // Print out the task added message
+            System.out.println(divider + "added this task:\n "+ newTask.toString() + "\n");
+            System.out.println("Now you have " + counter + " tasks in the list.\n" + divider);
         
         }
         return shouldExit;
