@@ -33,8 +33,10 @@ public class Kronos {
      * @param request User's full request containing task details such
      * as description, by date, start and end dates
      * @return A new Task object of the specified type
+     * @throws IllegalArgumentException If the task type is not recognized
+     * @throws NullPointerException If any of the required fields are missing
      */
-    public static Task createTask(String taskType, String request) {
+    public static Task createTask(String taskType, String request) throws IllegalArgumentException, NullPointerException {
 
         // Determine the task type based on the first word
         String description = "";
@@ -42,6 +44,12 @@ public class Kronos {
 
         switch (taskType) {
             case "todo":
+                
+                // If the request lacks a description, throw an exception
+                if (request.trim().length() < 5) {
+                    throw new NullPointerException("Sir, you might have forgotten to add a description.");
+                }
+
                 // Extract the description from the request
                 description = request.substring(5).trim();
 
@@ -51,9 +59,20 @@ public class Kronos {
             case "deadline":
                 // Split the request to get the description and by date
                 String[] deadlineComponents = request.split("/by");
+
+                // Trim each component to remove leading and trailing spaces
+                for (int i = 0; i < deadlineComponents.length; ++i) {
+                    deadlineComponents[i] = deadlineComponents[i].trim();
+                }
                 
+                if (deadlineComponents[0].length() <= 9) {
+                    throw new NullPointerException("Sir, you might have forgotten to add a description.");
+                } else if (deadlineComponents.length < 2 || deadlineComponents[1].isEmpty()) {
+                    throw new NullPointerException("Sir, you might have forgotten to add a by date.");
+                }
+
                 // Extract the by date from the request and description
-                String byDate = deadlineComponents[1].trim();
+                String byDate = deadlineComponents[1];
                 description = deadlineComponents[0].substring(9).trim();
                 
                 // Create a new Deadline task
@@ -62,10 +81,21 @@ public class Kronos {
             case "event":
                 // Split the request to get the description, start and end dates
                 String[] eventComponents = request.split("/from|/to");
+
+                // Trim each component to remove leading and trailing spaces
+                for (int i = 0; i < eventComponents.length; ++i) {
+                    eventComponents[i] = eventComponents[i].trim();
+                }
                 
+                if (eventComponents[0].trim().length() <= 6) {
+                    throw new NullPointerException("Sir, you might have forgotten to add a description.");
+                } else if (eventComponents.length < 3 || eventComponents[1].isEmpty() || eventComponents[2].isEmpty()) {
+                    throw new NullPointerException("Sir, you might have forgotten to add a start or end date.");
+                }
+
                 // Extract the start and end dates from the request
-                String startDate = eventComponents[1].trim();
-                String endDate = eventComponents[2].trim();
+                String startDate = eventComponents[1];
+                String endDate = eventComponents[2];
 
                 // Extract the description from the request
                 description = eventComponents[0].substring(6).trim();
@@ -73,6 +103,9 @@ public class Kronos {
                 // Create a new Event task
                 newTask = new Event(description, startDate, endDate);
                 break;
+            default:
+                // If the task type is not recognized, throw an exception
+                throw new IllegalArgumentException("What kind of task is " + taskType + "?");
         }
 
         return newTask;
@@ -141,14 +174,23 @@ public class Kronos {
 
         } else {
 
-            Task newTask = createTask(keyword, request);
+            try {
+                Task newTask = createTask(keyword, request);
+                
+                // Store the new task in the storage array
+                storage[counter++] = newTask;
 
-            // Store the new task in the storage array
-            storage[counter++] = newTask;
+                // Print out the task added message
+                System.out.println(divider + "added this task:\n "+ newTask.toString() + "\n");
+                System.out.println("Now you have " + counter + " tasks in the list.\n" + divider);
+                
+            } catch (IllegalArgumentException | NullPointerException e) {
+                // Print out the error message
+                System.out.println(divider + e.getMessage() + "\n" + divider);
+                return shouldExit;
+            }
 
-            // Print out the task added message
-            System.out.println(divider + "added this task:\n "+ newTask.toString() + "\n");
-            System.out.println("Now you have " + counter + " tasks in the list.\n" + divider);
+
         
         }
         return shouldExit;
