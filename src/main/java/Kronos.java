@@ -96,6 +96,7 @@ public class Kronos {
                     deadlineComponents[i] = deadlineComponents[i].trim();
                 }
                 
+                // Check for if the description or by date is missing
                 if (deadlineComponents[0].length() <= 9) {
                     throw new NullPointerException("Sir, you might have forgotten to add a description.");
                 } else if (deadlineComponents.length < 2 || deadlineComponents[1].isEmpty()) {
@@ -118,6 +119,7 @@ public class Kronos {
                     eventComponents[i] = eventComponents[i].trim();
                 }
                 
+                 // Check for if the description, from or to date is missing
                 if (eventComponents[0].trim().length() <= 6) {
                     throw new NullPointerException("Sir, you might have forgotten to add a description.");
                 } else if (eventComponents.length < 3 || eventComponents[1].isEmpty() || eventComponents[2].isEmpty()) {
