@@ -158,18 +158,19 @@ public class Kronos {
         
         String greetingMessage = "You've invoked the timekeeper Kronos\n" + "How may I assist you today?\n";
         boolean isExiting = false;
+        java.util.Scanner scanner = new java.util.Scanner(System.in);
 
         System.out.println(String.format(divider + greetingMessage + divider));
        
-        while (!isExiting) {
+        while (!isExiting && scanner.hasNextLine()) {
 
             // Await for user's message
-            String message = System.console().readLine();
+            String message = scanner.nextLine();
 
             // Invoke message handler function
             isExiting = handleRequest(message);
         
         }
-
+        scanner.close();
     }
 }
