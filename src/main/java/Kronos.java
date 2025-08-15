@@ -1,10 +1,36 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Kronos {
 
-    private static int counter = 0;
     private static final int MAX_SIZE = 100;
     private static String divider = "____________________________________________________________\n";
-    private static Task[] storage = new Task[MAX_SIZE];
+    private static List<Task> storage = new ArrayList<>();
     
+    /**
+     * Deletes a task from the storage
+     * @param taskNumber he index of the task to be deleted
+     * @return A formatted string showing the removed task
+     * @throws IndexOutOfBoundsException If the task number is invalid
+     */
+    public static String deleteTask(int taskNumber) throws IndexOutOfBoundsException {
+
+        // Check if the task number is valid
+        if (taskNumber < 0 || taskNumber >= storage.size()) {
+            throw new IndexOutOfBoundsException("Invalid task number: " + (taskNumber + 1));
+        }
+
+        // Remove the task from the list
+        Task removedTask = storage.remove(taskNumber);
+        
+        // Format the response to show the removed task
+        String responseString = "Noted. I've removed this task:\n";
+        responseString += "  " + removedTask.toString() + "\n"
+        + "Now you have " + storage.size() + " tasks in the list.\n";
+
+        return responseString;
+    }
+
     /**
      * Changes the completion status of a task
      * 
@@ -15,11 +41,11 @@ public class Kronos {
     public static String changeTaskStatus(boolean isDone, int taskNumber) {
 
         // Mark task as imcomplete
-        storage[taskNumber].setCompletionStatus(isDone);
+        storage.get(taskNumber).setCompletionStatus(isDone);
 
         // Extract task details
-        String taskDescription = storage[taskNumber].getDescription();
-        String taskStatus = storage[taskNumber].getCompletionStatus();
+        String taskDescription = storage.get(taskNumber).getDescription();
+        String taskStatus = storage.get(taskNumber).getCompletionStatus();
 
         // Return a formatted string showing the new status and description
         return String.format("  [%s] %s \n", taskStatus, taskDescription);
@@ -37,6 +63,11 @@ public class Kronos {
      * @throws NullPointerException If any of the required fields are missing
      */
     public static Task createTask(String taskType, String request) throws IllegalArgumentException, NullPointerException {
+
+        // Determine if the storage is full
+        if (storage.size() >= MAX_SIZE) {
+            throw new IllegalArgumentException("Task storage is full, I cannot add more tasks.");
+        }
 
         // Determine the task type based on the first word
         String description = "";
@@ -138,9 +169,9 @@ public class Kronos {
             String storedText = divider + listMessage;
 
             // Start a for loop to print out the stored text
-            for (int index = 0; index < counter; ++index) {
+            for (int index = 0; index < storage.size(); ++index) {
                 storedText += String.format("%d.", index + 1);
-                storedText += storage[index].toString() + "\n";
+                storedText += storage.get(index).toString() + "\n";
             }
             System.out.println(storedText + divider);
 
@@ -172,18 +203,28 @@ public class Kronos {
             // Print out the full response
             System.out.println(storedText + divider);
 
+        } else if (keyword.equals("delete")) {
+
+            //Extract the task number
+            Integer taskNumber = Integer.parseInt(requestComponents[1]) - 1;
+
+            //Delete the task and print out the response
+            String deleteText = deleteTask(taskNumber);
+
+            System.out.println(divider + deleteText + divider);
+
         } else {
 
             try {
                 Task newTask = createTask(keyword, request);
                 
                 // Store the new task in the storage array
-                storage[counter++] = newTask;
+                storage.add(newTask);
 
                 // Print out the task added message
                 System.out.println(divider + "added this task:\n "+ newTask.toString() + "\n");
-                System.out.println("Now you have " + counter + " tasks in the list.\n" + divider);
-                
+                System.out.println("Now you have " + storage.size() + " tasks in the list.\n" + divider);
+
             } catch (IllegalArgumentException | NullPointerException e) {
                 // Print out the error message
                 System.out.println(divider + e.getMessage() + "\n" + divider);
