@@ -6,6 +6,79 @@ public class Kronos {
     private static Task[] storage = new Task[MAX_SIZE];
     
     /**
+     * Changes the completion status of a task
+     * 
+     * @param isDone Boolean flag indicating whether the task is done or not
+     * @param taskNumber Where the task is stored in the storage array
+     * @return A formatted string showing the new status and task description
+     */
+    public static String changeTaskStatus(boolean isDone, int taskNumber) {
+
+        // Mark task as imcomplete
+        storage[taskNumber].setCompletionStatus(isDone);
+
+        // Extract task details
+        String taskDescription = storage[taskNumber].getDescription();
+        String taskStatus = storage[taskNumber].getCompletionStatus();
+
+        // Return a formatted string showing the new status and description
+        return String.format("  [%s] %s \n", taskStatus, taskDescription);
+
+    }
+
+    /**
+     * Creates a new Task object based on the user's request
+     * 
+     * @param taskType Type of task to be added (todo, deadline, event)
+     * @param request User's full request containing task details such
+     * as description, by date, start and end dates
+     * @return A new Task object of the specified type
+     */
+    public static Task createTask(String taskType, String request) {
+
+        // Determine the task type based on the first word
+        String description = "";
+        Task newTask = null;
+
+        switch (taskType) {
+            case "todo":
+                // Extract the description from the request
+                description = request.substring(5).trim();
+
+                // Create a new ToDo task
+                newTask = new ToDo(description);
+                break;
+            case "deadline":
+                // Split the request to get the description and by date
+                String[] deadlineComponents = request.split("/by");
+                
+                // Extract the by date from the request and description
+                String byDate = deadlineComponents[1].trim();
+                description = deadlineComponents[0].substring(9).trim();
+                
+                // Create a new Deadline task
+                newTask = new Deadline(description, byDate);
+                break;
+            case "event":
+                // Split the request to get the description, start and end dates
+                String[] eventComponents = request.split("/from|/to");
+                
+                // Extract the start and end dates from the request
+                String startDate = eventComponents[1].trim();
+                String endDate = eventComponents[2].trim();
+
+                // Extract the description from the request
+                description = eventComponents[0].substring(6).trim();
+
+                // Create a new Event task
+                newTask = new Event(description, startDate, endDate);
+                break;
+        }
+
+        return newTask;
+    }
+
+    /**
      * Handles the user's entered message
      * 
      * @param request User's entered message
@@ -47,14 +120,7 @@ public class Kronos {
             Integer taskNumber = Integer.parseInt(requestComponents[1]) - 1;
 
             // Mark task as completed
-            storage[taskNumber].setCompletionStatus(true);
-
-            // Extract task details
-            String taskDescription = storage[taskNumber].getDescription();
-            String taskStatus = storage[taskNumber].getCompletionStatus();
-
-            // Format the string
-            storedText += String.format("  [%s] %s \n", taskStatus, taskDescription);
+            storedText += changeTaskStatus(true, taskNumber);
             
             // Print out the full response
             System.out.println(storedText + divider);
@@ -67,60 +133,15 @@ public class Kronos {
             // Extract the task number
             Integer taskNumber = Integer.parseInt(requestComponents[1]) - 1;
 
-            // Mark task as imcomplete
-            storage[taskNumber].setCompletionStatus(false);
-
-            // Extract task details
-            String taskDescription = storage[taskNumber].getDescription();
-            String taskStatus = storage[taskNumber].getCompletionStatus();
-
-            // Format the string
-            storedText += String.format("  [%s] %s \n", taskStatus, taskDescription);
+            // Mark task as incomplete
+            storedText += changeTaskStatus(false, taskNumber);
             
             // Print out the full response
             System.out.println(storedText + divider);
 
         } else {
 
-            // Determine the task type based on the first word
-            String taskType = requestComponents[0];
-            String description = "";
-            Task newTask = null;
-
-            switch (taskType) {
-                case "todo":
-                    // Extract the description from the request
-                    description = request.substring(5).trim();
-
-                    // Create a new ToDo task
-                    newTask = new ToDo(description);
-                    break;
-                case "deadline":
-                    // Split the request to get the description and by date
-                    String[] deadlineComponents = request.split("/by");
-                    
-                    // Extract the by date from the request and description
-                    String byDate = deadlineComponents[1].trim();
-                    description = deadlineComponents[0].substring(9).trim();
-                    
-                    // Create a new Deadline task
-                    newTask = new Deadline(description, byDate);
-                    break;
-                case "event":
-                    // Split the request to get the description, start and end dates
-                    String[] eventComponents = request.split("/from|/to");
-                    
-                    // Extract the start and end dates from the request
-                    String startDate = eventComponents[1].trim();
-                    String endDate = eventComponents[2].trim();
-
-                    // Extract the description from the request
-                    description = eventComponents[0].substring(6).trim();
-
-                    // Create a new Event task
-                    newTask = new Event(description, startDate, endDate);
-                    break;
-            }
+            Task newTask = createTask(keyword, request);
 
             // Store the new task in the storage array
             storage[counter++] = newTask;
