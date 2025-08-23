@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.FileWriter;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,12 +81,12 @@ public class Kronos {
                         task = new ToDo(description);
                         break;
                     case "D":
-                        String byDate = components[3];
+                        LocalDate byDate = LocalDate.parse(components[3]);
                         task = new Deadline(description, byDate);
                         break;
                     case "E":
-                        String startDate = components[3];
-                        String endDate = components[4];
+                        LocalDate startDate = LocalDate.parse(components[3]);
+                        LocalDate endDate = LocalDate.parse(components[4]);
                         task = new Event(description, startDate, endDate);
                         break;
                     default:
@@ -161,8 +163,10 @@ public class Kronos {
      * @return A new Task object of the specified type
      * @throws IllegalArgumentException If the task type is not recognized
      * @throws NullPointerException If any of the required fields are missing
+     * @throws DateTimeParseException If the date format is incorrect
      */
-    public static Task createTask(String taskType, String request) throws IllegalArgumentException, NullPointerException {
+    public static Task createTask(String taskType, String request) throws IllegalArgumentException, 
+        NullPointerException, DateTimeParseException {
 
         // Determine if the storage is full
         if (storage.size() >= MAX_SIZE) {
@@ -204,7 +208,7 @@ public class Kronos {
                 }
 
                 // Extract the by date from the request and description
-                String byDate = deadlineComponents[1];
+                LocalDate byDate = LocalDate.parse(deadlineComponents[1]);
                 description = deadlineComponents[0].substring(9).trim();
                 
                 // Create a new Deadline task
@@ -227,8 +231,8 @@ public class Kronos {
                 }
 
                 // Extract the start and end dates from the request
-                String startDate = eventComponents[1];
-                String endDate = eventComponents[2];
+                LocalDate startDate = LocalDate.parse(eventComponents[1]);
+                LocalDate endDate = LocalDate.parse(eventComponents[2]);
 
                 // Extract the description from the request
                 description = eventComponents[0].substring(6).trim();
@@ -330,9 +334,9 @@ public class Kronos {
                 System.out.println(divider + "added this task:\n "+ newTask.toString() + "\n");
                 System.out.println("Now you have " + storage.size() + " tasks in the list.\n" + divider);
 
-            } catch (IllegalArgumentException | NullPointerException e) {
+            } catch (IllegalArgumentException | NullPointerException | DateTimeParseException e) {
                 // Print out the error message
-                System.out.println(divider + e.getMessage() + "\n" + divider);
+                System.out.println(divider + e.getMessage() + ". Please try again."+ "\n" + divider);
                 return shouldExit;
             }
 
