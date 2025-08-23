@@ -1,18 +1,15 @@
-import java.io.File;
-import java.io.FileWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Kronos {
 
     private static final int MAX_SIZE = 100;
-    private static String divider = "____________________________________________________________\n";
 
-    private static TaskList taskList;
-    private static Storage storage;
-    
+    private static TaskList taskList = new TaskList();
+    private static Storage storage = new Storage();
+    private static Ui ui = new Ui();
+
 
     /**
      * Deletes a task from the storage
@@ -34,7 +31,7 @@ public class Kronos {
         // Format the response to show the removed task
         String responseString = "Noted. I've removed this task:\n";
         responseString += "  " + removedTask.toString() + "\n"
-        + "Now you have " + taskList.getAllTasks().size() + " tasks in the list.\n";
+        + "Now you have " + taskList.getAllTasks().size() + " tasks in the list.";
 
         return responseString;
     }
@@ -56,9 +53,12 @@ public class Kronos {
         String taskStatus = taskList.getTask(taskNumber).getCompletionStatus();
 
         // Return a formatted string showing the new status and description
-        return String.format("  [%s] %s \n", taskStatus, taskDescription);
+        return String.format("  [%s] %s ", taskStatus, taskDescription);
 
     }
+
+
+    // Todo: Rework createTask to accept a varargs
 
     /**
      * Creates a new Task object based on the user's request
@@ -156,7 +156,7 @@ public class Kronos {
 
     /**
      * Handles the user's entered message
-     * 
+     * Todo: 
      * @param request User's entered message
      * @return Boolean flag to exit program or not 
      */
@@ -176,48 +176,49 @@ public class Kronos {
 
             // Print out a custom exit message
             String exitMessage = "Till next time...";
-            System.out.println(divider + exitMessage + "\n" + divider);
+            ui.showMessage(exitMessage);
         
         } else if (keyword.equals("list")) {
             
-            String listMessage = "Here are the tasks I've helped you store: \n";
-            String storedText = divider + listMessage;
             List<Task> tasks = taskList.getAllTasks();
+            String listMessage = "Here are the tasks I've helped you store: \n";
+            String storedText = listMessage;
 
             // Start a for loop to print out the stored text
             for (int index = 0; index < tasks.size(); ++index) {
                 storedText += String.format("%d.", index + 1);
                 storedText += tasks.get(index).toString() + "\n";
             }
-            System.out.println(storedText + divider);
+
+            storedText = storedText.substring(0, storedText.length() - 1);
+
+            ui.showMessage(storedText);
 
         } else if (keyword.equals("mark")) {
             
             String markMessage = "Marking that task as completed: \n";
-            String storedText = divider + markMessage;
 
             // Extract the task number
             Integer taskNumber = Integer.parseInt(requestComponents[1]) - 1;
 
             // Mark task as completed
-            storedText += changeTaskStatus(true, taskNumber);
+            markMessage += changeTaskStatus(true, taskNumber);
             
             // Print out the full response
-            System.out.println(storedText + divider);
+            ui.showMessage(markMessage);
 
         } else if (keyword.equals("unmark")) {
             
             String unmarkMessage = "Marking that task as incomplete: \n";
-            String storedText = divider + unmarkMessage;
 
             // Extract the task number
             Integer taskNumber = Integer.parseInt(requestComponents[1]) - 1;
 
             // Mark task as incomplete
-            storedText += changeTaskStatus(false, taskNumber);
+            unmarkMessage += changeTaskStatus(false, taskNumber);
             
             // Print out the full response
-            System.out.println(storedText + divider);
+            ui.showMessage(unmarkMessage);
 
         } else if (keyword.equals("delete")) {
 
@@ -227,7 +228,7 @@ public class Kronos {
             //Delete the task and print out the response
             String deleteText = deleteTask(taskNumber);
 
-            System.out.println(divider + deleteText + divider);
+            ui.showMessage(deleteText);
 
         } else {
 
@@ -238,12 +239,12 @@ public class Kronos {
                 taskList.addTask(newTask);
 
                 // Print out the task added message
-                System.out.println(divider + "added this task:\n "+ newTask.toString() + "\n");
-                System.out.println("Now you have " + taskList.getAllTasks().size() + " tasks in the list.\n" + divider);
+                ui.showMessage("added this task:\n "+ newTask.toString() + "\n" + 
+                    "Now you have " + taskList.getAllTasks().size() + " tasks in the list.");
 
             } catch (IllegalArgumentException | NullPointerException | DateTimeParseException e) {
                 // Print out the error message
-                System.out.println(divider + e.getMessage() + ". Please try again."+ "\n" + divider);
+                ui.showMessage(e.getMessage() + ". Please try again.");
                 return shouldExit;
             }
 
@@ -253,21 +254,21 @@ public class Kronos {
         return shouldExit;
     }
 
+    public void run() {
+        
+    }
+
     public static void main(String[] args) {
         
-        String greetingMessage = "You've invoked the timekeeper Kronos\n" + "How may I assist you today?\n";
+        String greetingMessage = "You've invoked the timekeeper Kronos\n" + "How may I assist you today?";
         boolean isExiting = false;
         java.util.Scanner scanner = new java.util.Scanner(System.in);
-
-        // Initialize the task list and storage
-        taskList = new TaskList();
-        storage = new Storage();
 
         //Load tasks
         taskList.setTasks(storage.loadTasks());
 
-        System.out.println(String.format(divider + greetingMessage + divider));
-       
+        ui.showMessage(greetingMessage);
+
         while (!isExiting && scanner.hasNextLine()) {
 
             // Await for user's message
