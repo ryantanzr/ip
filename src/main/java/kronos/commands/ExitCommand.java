@@ -1,3 +1,7 @@
+package kronos.commands;
+
+import kronos.tasklist.TaskList;
+
 public class ExitCommand implements Command {
    
     @Override

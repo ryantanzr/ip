@@ -1,3 +1,4 @@
+package kronos.ui;
 import java.util.Scanner;
 
 /**

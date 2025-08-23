@@ -1,3 +1,5 @@
+package kronos.commands;
+import kronos.tasklist.TaskList;
 
 /**
  * A representation of a command that Kronos can execute.

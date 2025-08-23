@@ -1,3 +1,4 @@
+package kronos.tasks;
 public enum TaskType {
     TODO,
     DEADLINE,

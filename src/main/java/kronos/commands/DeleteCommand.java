@@ -1,3 +1,9 @@
+package kronos.commands;
+
+import kronos.tasklist.TaskList;
+import kronos.tasks.Task;
+
+
 public class DeleteCommand implements Command {
 
     private final int taskNumber;

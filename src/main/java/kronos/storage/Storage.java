@@ -1,8 +1,14 @@
+package kronos.storage;
 import java.io.File;
 import java.io.FileWriter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import kronos.tasks.Deadline;
+import kronos.tasks.Event;
+import kronos.tasks.Task;
+import kronos.tasks.ToDo;
 
 public class Storage {
 

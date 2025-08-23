@@ -1,3 +1,10 @@
+package kronos;
+import kronos.commands.Command;
+import kronos.parser.Parser;
+import kronos.storage.Storage;
+import kronos.tasklist.TaskList;
+import kronos.ui.Ui;
+
 public class Kronos {
 
     private TaskList taskList = new TaskList();

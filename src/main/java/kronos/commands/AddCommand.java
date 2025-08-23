@@ -1,5 +1,13 @@
+package kronos.commands;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+
+import kronos.tasklist.TaskList;
+import kronos.tasks.Deadline;
+import kronos.tasks.Event;
+import kronos.tasks.Task;
+import kronos.tasks.TaskType;
+import kronos.tasks.ToDo;
 
 public class AddCommand implements Command {
 
