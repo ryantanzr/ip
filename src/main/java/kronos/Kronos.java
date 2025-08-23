@@ -31,6 +31,7 @@ public class Kronos {
                 responseString = command.execute(taskList);
 
                 if (responseString.equals("Till next time...")) {
+                    storage.saveTasks(taskList.getAllTasks());
                     isExiting = true;
                 }
 
