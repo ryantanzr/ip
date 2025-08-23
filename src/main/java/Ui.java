@@ -15,8 +15,6 @@ public class Ui {
     }
 
     public String getUserInput() {
-        System.out.print("Enter command: ");
-        scanner = new java.util.Scanner(System.in);
         return scanner.nextLine();
     }
 
