@@ -41,6 +41,73 @@ public class Kronos {
     }
 
     /**
+     * Loads saved tasks 
+     * @return A list of loaded tasks
+     */
+    private static List<Task> loadTasks() {
+        
+        List<Task> loadedTasks = new ArrayList<>();
+
+        // Create or open the file in the given file path
+        File file = new File(filePath);
+
+        // Read the tasks from the file
+        try (java.util.Scanner scanner = new java.util.Scanner(file)) {
+
+            // If a file doesn't exist, return an empty list
+            if (!file.exists()) {
+                return new ArrayList<Task>();
+            }
+
+            // Read each line from the csv file
+            while (scanner.hasNextLine()) {
+
+                // Extract and dissect the lines according to the CSV format
+                String line = scanner.nextLine();
+                String[] components = line.split(",");
+
+                // Extract the individdual components
+                String taskType = components[0];
+                String description = components[1];
+                boolean isDone = components[2].equals("1");
+
+                // Initialise the actual tasks
+                Task task = null;
+
+                switch (taskType) {
+                    case "TD":
+                        task = new ToDo(description);
+                        break;
+                    case "D":
+                        String byDate = components[3];
+                        task = new Deadline(description, byDate);
+                        break;
+                    case "E":
+                        String startDate = components[3];
+                        String endDate = components[4];
+                        task = new Event(description, startDate, endDate);
+                        break;
+                    default:
+                        System.out.println("Unknown task type: " + taskType);
+                        continue;
+                }
+
+                // Set the completion status of the task
+                if (task != null) {
+                    task.setCompletionStatus(isDone);
+                    loadedTasks.add(task);
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error loading tasks: " + e.getMessage());
+            loadedTasks = new ArrayList<Task>();
+        } 
+
+        return loadedTasks;
+    }
+
+    /**
      * Deletes a task from the storage
      * @param taskNumber he index of the task to be deleted
      * @return A formatted string showing the removed task
@@ -280,6 +347,9 @@ public class Kronos {
         String greetingMessage = "You've invoked the timekeeper Kronos\n" + "How may I assist you today?\n";
         boolean isExiting = false;
         java.util.Scanner scanner = new java.util.Scanner(System.in);
+
+        // Load tasks
+        storage = loadTasks();
 
         System.out.println(String.format(divider + greetingMessage + divider));
        
