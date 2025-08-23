@@ -8,5 +8,10 @@ public class ToDo extends Task {
     public String toString() {
         return "[T] " + super.toString();
     }
-    
+
+    @Override
+    public String toDataString() {
+        return String.format("TD,%s", super.toDataString());
+    }
+
 }

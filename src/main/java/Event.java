@@ -14,4 +14,9 @@ public class Event extends Task {
         return "[E] " + super.toString() + " (from: " + start
                 + " to: " + end + ")";
     }
+
+    @Override
+    public String toDataString() {
+        return String.format("E,%s,%s,%s", super.toDataString(), start, end);
+    }
 }

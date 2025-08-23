@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -6,7 +8,38 @@ public class Kronos {
     private static final int MAX_SIZE = 100;
     private static String divider = "____________________________________________________________\n";
     private static List<Task> storage = new ArrayList<>();
+    private static String filePath = "data/tasks.csv";
     
+    /**
+     * Saves the current tasks to a csv file
+     * @throws java.io.IOException
+     */
+    private static void saveTasks() {
+        
+        // Create or open the file in the given file path
+        File file = new File(filePath);
+
+        // Write the tasks into the file
+        try (FileWriter writer = new FileWriter(file)) {
+            
+            // Create a new file if it doesn't exist
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            // Write the tasks into the file
+            for (Task task : storage) {
+                writer.write(task.toDataString() + "\n");
+            }
+
+            // Flush the writer to ensure all data is written
+            writer.flush();
+
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Deletes a task from the storage
      * @param taskNumber he index of the task to be deleted
@@ -160,6 +193,9 @@ public class Kronos {
 
             // Toggle shouldExit to true
             shouldExit = true;
+
+            // Save the tasks to the given file
+            saveTasks();
 
             // Print out a custom exit message
             String exitMessage = "Till next time...";

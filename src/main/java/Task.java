@@ -25,4 +25,8 @@ public class Task {
         return String.format("[%s] %s", getCompletionStatus(), description);
     }
 
+    public String toDataString() {
+        return String.format("%s,%s", description, (isDone ? "1" : "0"));
+    }
+
 }
