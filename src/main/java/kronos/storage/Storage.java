@@ -56,12 +56,15 @@ public class Storage {
         File file = new File(filePath);
 
         // Read the tasks from the file
-        try (java.util.Scanner scanner = new java.util.Scanner(file)) {
+        try {
 
-            // If a file doesn't exist, return an empty list
+            // If a file or file doesn't exist, create a new directory
             if (!file.exists()) {
-                return new ArrayList<Task>();
+                file.getParentFile().mkdirs();
+                file.createNewFile();
             }
+
+            java.util.Scanner scanner = new java.util.Scanner(file);
 
             // Read each line from the csv file
             while (scanner.hasNextLine()) {
@@ -102,6 +105,8 @@ public class Storage {
                     loadedTasks.add(task);
                 }
             }
+
+            scanner.close();
 
         } catch (Exception e) {
             System.out.println("Error loading tasks: " + e.getMessage());
