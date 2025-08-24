@@ -1,21 +1,23 @@
 package kronos.parser;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
-import kronos.commands.Command;
+
 import kronos.commands.AddCommand;
-import kronos.commands.ListCommand;
+import kronos.commands.Command;
 import kronos.commands.DeleteCommand;
+import kronos.commands.ExitCommand;
+import kronos.commands.ListCommand;
 import kronos.commands.MarkCommand;
 import kronos.commands.UnmarkCommand;
-import kronos.commands.ExitCommand;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ParserTest {
 
+
     @Test
-    public void ValidRequestTest() {
+    public void validRequestTest() {
 
         String request = "todo Run";
         Parser parser = new Parser();
@@ -46,7 +48,7 @@ public class ParserTest {
 
 
     @Test
-    public void InvalidRequestTest() {
+    public void invalidRequestTest() {
 
         String request = "Lorem Ipsum";
         Parser parser = new Parser();

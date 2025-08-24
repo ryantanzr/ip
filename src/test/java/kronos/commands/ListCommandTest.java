@@ -1,15 +1,16 @@
 package kronos.commands;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
+
 import kronos.tasklist.TaskList;
 import kronos.tasks.ToDo;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ListCommandTest {
 
     @Test
-    public void ListTest() {
+    public void listTest() {
 
         TaskList taskList = new TaskList();
         taskList.addTask(new ToDo("read book"));
@@ -25,5 +26,5 @@ public class ListCommandTest {
 
         assertEquals(expectedOutput, outputString);
     }
-    
+
 }
