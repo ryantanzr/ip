@@ -4,6 +4,7 @@ import kronos.commands.AddCommand;
 import kronos.commands.Command;
 import kronos.commands.DeleteCommand;
 import kronos.commands.ExitCommand;
+import kronos.commands.FindCommand;
 import kronos.commands.ListCommand;
 import kronos.commands.MarkCommand;
 import kronos.commands.UnmarkCommand;
@@ -40,6 +41,9 @@ public class Parser {
         } else if (keyword.equals("delete")) {
             Integer taskNumber = Integer.parseInt(requestComponents[1]) - 1;
             command = new DeleteCommand(taskNumber);
+        } else if (keyword.equals("find")) {
+            String searchTerm = requestComponents[1];
+            command = new FindCommand(searchTerm);
         } else {
             TaskType taskType = TaskType.fromString(keyword);
             command = new AddCommand(taskType, userInput);
