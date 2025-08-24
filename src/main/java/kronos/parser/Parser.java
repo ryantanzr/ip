@@ -1,4 +1,5 @@
 package kronos.parser;
+
 import kronos.commands.AddCommand;
 import kronos.commands.Command;
 import kronos.commands.DeleteCommand;
@@ -9,20 +10,24 @@ import kronos.commands.UnmarkCommand;
 import kronos.tasks.TaskType;
 
 /**
- * Responsible for parsing user input and extracting relevant information.
+ * Parses user input and extracting relevant information.
  * And returning an appropriate enum which represents the next action to
  * take.
  */
-
 public class Parser {
 
+    /**
+     * Parses user input and returns the corresponding command.
+     * @param userInput The user input to parse.
+     * @return The command corresponding to the user input.
+     */
     public Command parse(String userInput) {
 
         String[] requestComponents = userInput.split(" ");
         String keyword = requestComponents[0];
         Command command = null;
 
-        if (keyword.equals( "bye")) {
+        if (keyword.equals("bye")) {
             command = new ExitCommand();
         } else if (keyword.equals("list")) {
             command = new ListCommand();
@@ -36,7 +41,7 @@ public class Parser {
             Integer taskNumber = Integer.parseInt(requestComponents[1]) - 1;
             command = new DeleteCommand(taskNumber);
         } else {
-            TaskType taskType = TaskType.fromString(keyword);    
+            TaskType taskType = TaskType.fromString(keyword);
             command = new AddCommand(taskType, userInput);
         }
 

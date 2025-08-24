@@ -2,6 +2,9 @@ package kronos.commands;
 
 import kronos.tasklist.TaskList;
 
+/**
+ * Represents a command to mark a task as complete.
+ */
 public class MarkCommand implements Command {
 
     private final int taskNumber;
@@ -11,10 +14,9 @@ public class MarkCommand implements Command {
     }
 
     /**
-     * Changes the completion status of a task
-     * 
-     * @param taskNumber Where the task is stored in the storage array
-     * @return A formatted string showing the new status and task description
+     * Changes the completion status of a task.
+     * @param taskList The list of tasks to modify.
+     * @return A formatted string showing the new status and task description.
      */
     @Override
     public String execute(TaskList taskList) {

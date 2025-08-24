@@ -5,6 +5,9 @@ import kronos.storage.Storage;
 import kronos.tasklist.TaskList;
 import kronos.ui.Ui;
 
+/**
+ * Represents the main entry point for the Kronos chatbot application.
+ */
 public class Kronos {
 
     private TaskList taskList = new TaskList();
@@ -12,14 +15,17 @@ public class Kronos {
     private Parser parser = new Parser();
     private Ui ui = new Ui();
 
+    /**
+     * Starts the Kronos application.
+     */
     public void run() {
 
         boolean isExiting = false;
         String greetingMessage = "You've invoked the timekeeper Kronos\n" + "How may I assist you today?";
-        
+
         ui.showMessage(greetingMessage);
-        taskList.setTasks(storage.loadTasks());       
-        
+        taskList.setTasks(storage.loadTasks());
+
         while (!isExiting) {
 
             String message = ui.getUserInput();
@@ -35,7 +41,7 @@ public class Kronos {
                     isExiting = true;
                 }
 
-            ui.showMessage(responseString);
+                ui.showMessage(responseString);
 
             } catch (Exception e) {
                 ui.showMessage("Error: " + e.getMessage());
@@ -44,8 +50,12 @@ public class Kronos {
 
     }
 
+    /**
+     * Represents the entry point for the Kronos application.
+     * @param args Command-line arguments (not used).
+     */
     public static void main(String[] args) {
-        
+
         Kronos kronos = new Kronos();
         kronos.run();
 
