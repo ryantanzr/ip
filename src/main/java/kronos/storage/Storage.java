@@ -1,5 +1,4 @@
 package kronos.storage;
-import java.io.File;
 import java.io.FileWriter;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,7 +11,7 @@ import kronos.tasks.ToDo;
 
 public class Storage {
 
-    private String filePath = "data/tasks.csv";
+    private java.nio.file.Path dataPath = java.nio.file.Paths.get("data", "tasks.csv");
 
     /**
      * Saves the current tasks to a csv file
@@ -20,24 +19,21 @@ public class Storage {
      */
     public void saveTasks(List<Task> taskList) {
         
-        // Create or open the file in the given file path
-        File file = new File(filePath);
-
-        // Write the tasks into the file
-        try (FileWriter writer = new FileWriter(file)) {
+        try {
+            // Create directories if it doesn't exist
+            java.nio.file.Files.createDirectories(dataPath.getParent());
             
-            // Create a new file if it doesn't exist
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-
             // Write the tasks into the file
-            for (Task task : taskList) {
-                writer.write(task.toDataString() + "\n");
-            }
+            try (FileWriter writer = new FileWriter(dataPath.toFile())) {
+                
+                // Write the tasks into the file
+                for (Task task : taskList) {
+                    writer.write(task.toDataString() + "\n");
+                }
 
-            // Flush the writer to ensure all data is written
-            writer.flush();
+                // Flush the writer to ensure all data is written
+                writer.flush();
+            }
 
         } catch (java.io.IOException e) {
             e.printStackTrace();
@@ -52,19 +48,14 @@ public class Storage {
         
         List<Task> loadedTasks = new ArrayList<>();
 
-        // Create or open the file in the given file path
-        File file = new File(filePath);
-
-        // Read the tasks from the file
         try {
-
-            // If a file or file doesn't exist, create a new directory
-            if (!file.exists()) {
-                file.getParentFile().mkdirs();
-                file.createNewFile();
+            // Create directories and file if they don't exist
+            if (!java.nio.file.Files.exists(dataPath)) {
+                java.nio.file.Files.createDirectories(dataPath.getParent());
+                java.nio.file.Files.createFile(dataPath);
             }
 
-            java.util.Scanner scanner = new java.util.Scanner(file);
+            java.util.Scanner scanner = new java.util.Scanner(dataPath.toFile());
 
             // Read each line from the csv file
             while (scanner.hasNextLine()) {
