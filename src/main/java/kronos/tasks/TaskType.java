@@ -1,6 +1,5 @@
 package kronos.tasks;
 
-
 /**
  * Represents the different types of tasks.
  */

@@ -1,4 +1,5 @@
 package kronos.ui;
+
 import java.util.Scanner;
 
 /**
@@ -25,7 +26,5 @@ public class Ui {
     public String getUserInput() {
         return scanner.nextLine();
     }
-
-
 
 }
