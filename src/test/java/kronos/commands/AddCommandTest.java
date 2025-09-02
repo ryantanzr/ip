@@ -9,8 +9,6 @@ import kronos.tasklist.TaskList;
 import kronos.tasks.TaskType;
 import kronos.tasks.ToDo;
 
-
-
 public class AddCommandTest {
 
     @Test
