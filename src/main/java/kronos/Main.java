@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import kronos.ui.components.MainWindow;
 
 /**
  * Represents the main entry point for the Kronos chatbot application.

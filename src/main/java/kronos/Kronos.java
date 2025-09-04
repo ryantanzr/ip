@@ -5,6 +5,7 @@ import kronos.parser.Parser;
 import kronos.storage.Storage;
 import kronos.tasklist.TaskList;
 import kronos.ui.Ui;
+import kronos.ui.components.MainWindow;
 
 /**
  * Represents the main entry point for the Kronos chatbot application.

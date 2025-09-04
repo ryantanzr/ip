@@ -1,6 +1,6 @@
 package kronos.ui;
 
-import kronos.MainWindow;
+import kronos.ui.components.MainWindow;
 
 /**
  * Handles user interactions and displays information to the user.

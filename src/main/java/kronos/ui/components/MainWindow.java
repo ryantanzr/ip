@@ -1,4 +1,4 @@
-package kronos;
+package kronos.ui.components;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import kronos.Kronos;
 
 /**
  * Represents the main window component of the Kronos chatbot application.
