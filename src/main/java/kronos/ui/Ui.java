@@ -1,30 +1,27 @@
 package kronos.ui;
 
-import java.util.Scanner;
+import kronos.MainWindow;
 
 /**
  * Handles user interactions and displays information to the user.
  */
 public class Ui {
 
-    private String divider = "____________________________________________________________";
-    private Scanner scanner = new Scanner(System.in);
+    private MainWindow mainWindow;
 
     /**
      * Displays a message to the user with top and bottom dividers.
      */
-    public void showMessage(String message) {
-        System.out.println(divider);
-        System.out.println(message);
-        System.out.println(divider);
+    public void showResponse(String message) {
+        mainWindow.showResponse(message);
     }
 
     /**
-     * Pauses the program to retrieve user input.
-     * @return The user input as a string.
+     * Sets the main window for the UI.
+     * @param mainWindow The main window to set.
      */
-    public String getUserInput() {
-        return scanner.nextLine();
+    public void setMainWindow(MainWindow mainWindow) {
+        this.mainWindow = mainWindow;
     }
 
 }

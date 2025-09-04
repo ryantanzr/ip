@@ -1,4 +1,5 @@
 package kronos;
+
 import kronos.commands.Command;
 import kronos.parser.Parser;
 import kronos.storage.Storage;
@@ -15,49 +16,63 @@ public class Kronos {
     private Parser parser = new Parser();
     private Ui ui = new Ui();
 
+    private boolean isExiting = false;
+
     /**
-     * Starts the Kronos application.
+     * Initializes the Kronos application with a handle
+     * to manage the main window.
+     * @param mainWindow The main window to interact with.
      */
-    public void run() {
+    public Kronos(MainWindow mainWindow) {
+        this.ui.setMainWindow(mainWindow);
 
-        boolean isExiting = false;
-        String greetingMessage = "You've invoked the timekeeper Kronos\n" + "How may I assist you today?";
+        try {
 
-        ui.showMessage(greetingMessage);
-        taskList.setTasks(storage.loadTasks());
+            String greetingMessage = "You've invoked the timekeeper Kronos\n" + "How may I assist you today?";
 
-        while (!isExiting) {
+            ui.showResponse(greetingMessage);
+            taskList.setTasks(storage.loadTasks());
 
-            String message = ui.getUserInput();
-            String responseString = "";
-
-            try {
-
-                Command command = parser.parse(message);
-                responseString = command.execute(taskList);
-
-                if (responseString.equals("Till next time...")) {
-                    storage.saveTasks(taskList.getAllTasks());
-                    isExiting = true;
-                }
-
-                ui.showMessage(responseString);
-
-            } catch (Exception e) {
-                ui.showMessage("Error: " + e.getMessage());
-            }
+        } catch (Exception e) {
+            ui.showResponse("Error: " + e.getMessage());
         }
-
     }
 
     /**
-     * Represents the entry point for the Kronos application.
-     * @param args Command-line arguments (not used).
+     * Saves the current tasks to storage.
      */
-    public static void main(String[] args) {
+    public void saveTasks() {
+        storage.saveTasks(taskList.getAllTasks());
+    }
 
-        Kronos kronos = new Kronos();
-        kronos.run();
+    /**
+     * Handles a user message by parsing and executing the corresponding command.
+     * @param message The user message to handle.
+     */
+    public void handleMessage(String message) {
 
+        String responseString = "";
+
+        try {
+
+            Command command = parser.parse(message);
+            responseString = command.execute(taskList);
+            ui.showResponse(responseString);
+
+            if (responseString.equals("Till next time...")) {
+                isExiting = true;
+            }
+
+        } catch (Exception e) {
+            ui.showResponse("Error: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Checks if the application is set to exit.
+     * @return True if the application should exit, false otherwise.
+     */
+    public boolean getIsExiting() {
+        return isExiting;
     }
 }
