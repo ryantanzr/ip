@@ -113,8 +113,7 @@ public class AddCommand implements Command {
             newTask = new Event(description, startDate, endDate);
             break;
         default:
-            // If the task type is not recognized, throw an exception
-            throw new IllegalArgumentException("What kind of task is " + taskType + "?");
+            assert false : "Unexpected task type: " + taskType;
         }
 
         // Add the new task to the list
