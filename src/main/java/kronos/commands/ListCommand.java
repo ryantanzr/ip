@@ -10,8 +10,10 @@ import kronos.tasks.Task;
  */
 public class ListCommand implements Command {
 
+    private static final String LIST_MESSAGE = "Sir, here are the tasks in your list:\n";
+
     /**
-     * Executes the list command.
+     * Lists out all tasks in the storage.
      * @param taskList The list of tasks to retrieve.
      * @return A formatted string listing all tasks.
      */
@@ -19,8 +21,7 @@ public class ListCommand implements Command {
     public String execute(TaskList taskList) {
 
         List<Task> tasks = taskList.getAllTasks();
-        String listMessage = "Here are the tasks I've helped you store: \n";
-        String storedText = listMessage;
+        String storedText = LIST_MESSAGE;
 
         // Start a for loop to print out the stored text
         for (int index = 0; index < tasks.size(); ++index) {
