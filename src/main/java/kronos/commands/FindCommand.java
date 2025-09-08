@@ -11,7 +11,7 @@ import kronos.tasks.Task;
  */
 public class FindCommand implements Command {
 
-    private String searchTerm;
+    private final String searchTerm;
 
     /**
      * Constructs a FindCommand.
