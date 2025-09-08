@@ -33,3 +33,9 @@ jobs:
 
       - name: Build and check with Gradle
         run: ./gradlew check
+
+      - name: Run Checkstyle on main source
+        run: ./gradlew checkstyleMain
+
+      - name: Run Checkstyle on test source  
+        run: ./gradlew checkstyleTest
