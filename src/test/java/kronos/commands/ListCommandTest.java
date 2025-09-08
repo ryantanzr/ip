@@ -18,7 +18,7 @@ public class ListCommandTest {
         taskList.addTask(new ToDo("meditate"));
 
         ListCommand listCommand = new ListCommand();
-        String expectedOutput = "Here are the tasks I've helped you store: \n"
+        String expectedOutput = "Sir, here are the tasks in your list:\n"
                 + "1.[T] [ ] read book\n"
                 + "2.[T] [ ] run\n"
                 + "3.[T] [ ] meditate";
