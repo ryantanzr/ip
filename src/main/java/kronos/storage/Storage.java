@@ -45,6 +45,48 @@ public class Storage {
     }
 
     /**
+     * Creates a Task object from a line in the csv file.
+     * @param line The line from the csv file.
+     * @return The created Task object.
+     */
+    private Task createTask(String line) {
+
+        // Extract and dissect the lines according to the CSV format
+        String[] components = line.split(",");
+
+        // Extract the individdual components
+        String taskType = components[0];
+        String description = components[1];
+        boolean isDone = components[2].equals("1");
+
+        // Initialise the actual tasks
+        Task task = null;
+
+        switch (taskType) {
+        case "TD":
+            task = new ToDo(description);
+            break;
+        case "D":
+            LocalDate byDate = LocalDate.parse(components[3]);
+            task = new Deadline(description, byDate);
+            break;
+        case "E":
+            LocalDate startDate = LocalDate.parse(components[3]);
+            LocalDate endDate = LocalDate.parse(components[4]);
+            task = new Event(description, startDate, endDate);
+            break;
+        default:
+            System.out.println("Unknown task type: " + taskType);
+        }
+
+        if (task != null) {
+            task.setCompletionStatus(isDone);
+        }
+
+        return task;
+    }
+
+    /**
      * Loads saved tasks into the task list.
      * @return A list of loaded tasks.
      */
@@ -64,41 +106,11 @@ public class Storage {
             // Read each line from the csv file
             while (scanner.hasNextLine()) {
 
-                // Extract and dissect the lines according to the CSV format
-                String line = scanner.nextLine();
-                String[] components = line.split(",");
+                // Create a task from the line
+                Task task = createTask(scanner.nextLine());
 
-                // Extract the individdual components
-                String taskType = components[0];
-                String description = components[1];
-                boolean isDone = components[2].equals("1");
-
-                // Initialise the actual tasks
-                Task task = null;
-
-                switch (taskType) {
-                case "TD":
-                    task = new ToDo(description);
-                    break;
-                case "D":
-                    LocalDate byDate = LocalDate.parse(components[3]);
-                    task = new Deadline(description, byDate);
-                    break;
-                case "E":
-                    LocalDate startDate = LocalDate.parse(components[3]);
-                    LocalDate endDate = LocalDate.parse(components[4]);
-                    task = new Event(description, startDate, endDate);
-                    break;
-                default:
-                    System.out.println("Unknown task type: " + taskType);
-                    continue;
-                }
-
-                // Set the completion status of the task
-                if (task != null) {
-                    task.setCompletionStatus(isDone);
-                    loadedTasks.add(task);
-                }
+                // Load the task into the list
+                loadedTasks.add(task);
             }
 
             scanner.close();

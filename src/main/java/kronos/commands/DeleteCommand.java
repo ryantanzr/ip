@@ -27,7 +27,6 @@ public class DeleteCommand implements Command {
     @Override
     public String execute(TaskList taskList) throws IndexOutOfBoundsException {
 
-
         // Check if the task number is valid
         if (taskNumber < 0 || taskNumber >= taskList.getAllTasks().size()) {
             throw new IndexOutOfBoundsException("Invalid task number: " + (taskNumber + 1));

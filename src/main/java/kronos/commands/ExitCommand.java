@@ -7,12 +7,14 @@ import kronos.tasklist.TaskList;
  */
 public class ExitCommand implements Command {
 
+    private static final String EXIT_MESSAGE = "Till next time...";
+
     /**
      * Executes the exit command.
      */
     @Override
     public String execute(TaskList taskList) {
-        return "Till next time...";
+        return EXIT_MESSAGE;
     }
 
 }
