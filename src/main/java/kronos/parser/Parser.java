@@ -2,11 +2,13 @@ package kronos.parser;
 
 import kronos.commands.AddCommand;
 import kronos.commands.Command;
+import kronos.commands.CommandType;
 import kronos.commands.DeleteCommand;
 import kronos.commands.ExitCommand;
 import kronos.commands.FindCommand;
 import kronos.commands.ListCommand;
 import kronos.commands.MarkCommand;
+import kronos.commands.TagCommand;
 import kronos.commands.UnmarkCommand;
 import kronos.tasks.TaskType;
 
@@ -26,29 +28,42 @@ public class Parser {
 
         String[] requestComponents = userInput.split(" ");
         String keyword = requestComponents[0];
+        CommandType commandType = CommandType.fromString(keyword);
         Command command = null;
 
-        if (keyword.equals("bye")) {
+        switch (commandType) {
+        case EXIT:
             command = new ExitCommand();
-        } else if (keyword.equals("list")) {
+            break;
+        case LIST:
             command = new ListCommand();
-        } else if (keyword.equals("mark")) {
+            break;
+        case MARK:
             Integer taskNumber = Integer.parseInt(requestComponents[1]) - 1;
             command = new MarkCommand(taskNumber);
-        } else if (keyword.equals("unmark")) {
-            Integer taskNumber = Integer.parseInt(requestComponents[1]) - 1;
+            break;
+        case UNMARK:
+            taskNumber = Integer.parseInt(requestComponents[1]) - 1;
             command = new UnmarkCommand(taskNumber);
-        } else if (keyword.equals("delete")) {
-            Integer taskNumber = Integer.parseInt(requestComponents[1]) - 1;
+            break;
+        case DELETE:
+            taskNumber = Integer.parseInt(requestComponents[1]) - 1;
             command = new DeleteCommand(taskNumber);
-        } else if (keyword.equals("find")) {
+            break;
+        case FIND:
             String searchTerm = requestComponents[1];
             command = new FindCommand(searchTerm);
-        } else {
+            break;
+        case TAG:
+            taskNumber = Integer.parseInt(requestComponents[1]) - 1;
+            command = new TagCommand(userInput, taskNumber);
+            break;
+        default:
             TaskType taskType = TaskType.fromString(keyword);
             command = new AddCommand(taskType, userInput);
+            break;
         }
-
+        
         return command;
     }
 

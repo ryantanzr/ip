@@ -45,6 +45,37 @@ public class Storage {
     }
 
     /**
+     * Extracts tags from the given components array starting from the specified index.
+     * @param components The array of string components.
+     * @return A list of extracted tags.
+     */
+    private List<String> extractTags(String[] components) {
+        List<String> tags = new ArrayList<>();
+        for (String component : components) {
+            if (component.startsWith("#")) {
+                tags.add(component);
+            }
+        }
+        return tags;
+    }
+
+    private List<String> extractTaskComponents(String[] components) {
+        List<String> fields = new ArrayList<>();
+        for (String component : components) {
+            if (!component.startsWith("#")) {
+                fields.add(component);
+            }
+        }
+        return fields;
+    }
+
+    /**
+     * 
+     * @param line
+     * @return
+     */
+
+    /**
      * Creates a Task object from a line in the csv file.
      * @param line The line from the csv file.
      * @return The created Task object.
@@ -54,10 +85,14 @@ public class Storage {
         // Extract and dissect the lines according to the CSV format
         String[] components = line.split(",");
 
-        // Extract the individdual components
-        String taskType = components[0];
-        String description = components[1];
-        boolean isDone = components[2].equals("1");
+        // Extract tags and fields from the components
+        List<String> tags = extractTags(components);
+        List<String> fields = extractTaskComponents(components);
+
+        // Extract the individual fields
+        String taskType = fields.get(0);
+        String description = fields.get(1);
+        boolean isDone = fields.get(2).equals("1");
 
         // Initialise the actual tasks
         Task task = null;
@@ -67,12 +102,12 @@ public class Storage {
             task = new ToDo(description);
             break;
         case "D":
-            LocalDate byDate = LocalDate.parse(components[3]);
+            LocalDate byDate = LocalDate.parse(fields.get(3));
             task = new Deadline(description, byDate);
             break;
         case "E":
-            LocalDate startDate = LocalDate.parse(components[3]);
-            LocalDate endDate = LocalDate.parse(components[4]);
+            LocalDate startDate = LocalDate.parse(fields.get(3));
+            LocalDate endDate = LocalDate.parse(fields.get(4));
             task = new Event(description, startDate, endDate);
             break;
         default:
@@ -81,6 +116,12 @@ public class Storage {
 
         if (task != null) {
             task.setCompletionStatus(isDone);
+        } else {
+            System.out.println("Error creating task: " + line);
+        }
+
+        if (!tags.isEmpty()) {
+            task.addTags(tags.toArray(new String[0]));
         }
 
         return task;
