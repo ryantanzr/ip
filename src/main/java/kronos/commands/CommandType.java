@@ -11,7 +11,8 @@ public enum CommandType {
     UNMARK,
     FIND,
     LIST,
-    TAG;
+    TAG,
+    UNTAG;
 
     /**
      * Converts a string keyword to its corresponding CommandType.
@@ -36,6 +37,8 @@ public enum CommandType {
             return LIST;
         } else if (keyword.equals("tag")) {
             return TAG;
+        } else if (keyword.equals("untag")) {
+            return UNTAG;
         } else {
             throw new IllegalArgumentException("Sir what do you mean by: " + keyword + "?");
         }

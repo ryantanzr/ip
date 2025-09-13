@@ -35,9 +35,10 @@ public class Task {
     /**
      * Removes a tag from the task.
      * @param tag The tag to remove.
+     * @return true if the tag was removed, false otherwise.
      */
-    public void removeTag(String tag) {
-        this.tags.remove(tag);
+    public boolean removeTag(String tag) {
+        return this.tags.remove(tag);
     }
 
     /**

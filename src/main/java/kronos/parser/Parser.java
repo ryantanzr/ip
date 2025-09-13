@@ -10,6 +10,7 @@ import kronos.commands.ListCommand;
 import kronos.commands.MarkCommand;
 import kronos.commands.TagCommand;
 import kronos.commands.UnmarkCommand;
+import kronos.commands.UntagCommand;
 import kronos.tasks.TaskType;
 
 /**
@@ -57,6 +58,11 @@ public class Parser {
         case TAG:
             taskNumber = Integer.parseInt(requestComponents[1]) - 1;
             command = new TagCommand(userInput, taskNumber);
+            break;
+        case UNTAG:
+            taskNumber = Integer.parseInt(requestComponents[1]) - 1;
+            String tagToRemove = requestComponents[2];
+            command = new UntagCommand(tagToRemove, taskNumber);
             break;
         default:
             TaskType taskType = TaskType.fromString(keyword);
