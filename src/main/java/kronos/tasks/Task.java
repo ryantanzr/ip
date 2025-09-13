@@ -24,7 +24,7 @@ public class Task {
 
     /**
      * Adds a tag to the task.
-     * @param tag A short tag
+     * @param tags A list of tags to add.
      */
     public void addTags(String... tags) {
         for (String tag : tags) {

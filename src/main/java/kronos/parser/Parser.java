@@ -69,7 +69,7 @@ public class Parser {
             command = new AddCommand(taskType, userInput);
             break;
         }
-        
+
         return command;
     }
 

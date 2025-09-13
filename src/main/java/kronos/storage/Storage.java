@@ -59,6 +59,11 @@ public class Storage {
         return tags;
     }
 
+    /**
+     * Extracts task fields from the given components array.
+     * @param components The array of string components.
+     * @return A list of extracted task fields.
+     */
     private List<String> extractTaskComponents(String[] components) {
         List<String> fields = new ArrayList<>();
         for (String component : components) {
@@ -68,12 +73,6 @@ public class Storage {
         }
         return fields;
     }
-
-    /**
-     * 
-     * @param line
-     * @return
-     */
 
     /**
      * Creates a Task object from a line in the csv file.

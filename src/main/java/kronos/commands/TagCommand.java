@@ -10,20 +10,27 @@ import kronos.tasks.Task;
  */
 public class TagCommand implements Command {
 
+    private static final String TAG_PATTERN = "^#[a-zA-Z]+$";
+    private static final int MAX_TAGS = 3;
+
     private final String request;
     private final int taskNumber;
-    private static final int MAX_TAGS=3;
-    private static final String TAG_PATTERN = "^#[a-zA-Z]+$";
 
+    /**
+     * Constructs a TagCommand.
+     * @param request The full user input string.
+     * @param taskNumber The index of the task to tag.
+     */
     public TagCommand(String request, int taskNumber) {
         this.request = request;
         this.taskNumber = taskNumber;
     }
 
     /**
-     * Validate the tags
-     * @param tags The array of tags to validate
-     * @throws IllegalArgumentException If any tag is invalid
+     * Validates the tags before adding them to the task.
+     * @param currentTagCount The current number of tags on the task.
+     * @param tags The array of tags to validate.
+     * @throws IllegalArgumentException If any tag is invalid.
      */
     private void validateTags(int currentTagCount, String... tags) throws IllegalArgumentException {
         if (currentTagCount + tags.length > MAX_TAGS) {
@@ -31,7 +38,8 @@ public class TagCommand implements Command {
         }
         for (String tag : tags) {
             if (!tag.matches(TAG_PATTERN)) {
-                throw new IllegalArgumentException("Tag '" + tag + "' contains invalid characters. Only alphanumeric characters and underscores are allowed.");
+                throw new IllegalArgumentException("Tag '" + tag + "' contains invalid characters. "
+                        + "Only alphanumeric characters and underscores are allowed.");
             }
         }
     }
@@ -39,7 +47,7 @@ public class TagCommand implements Command {
     /**
      * Adds tags to a task.
      * @param taskList The list of tasks to modify.
-     * @return A formatted string showing the new tags
+     * @return A formatted string showing the new tags.
      */
     @Override
     public String execute(TaskList taskList) {

@@ -1,7 +1,5 @@
 package kronos.commands;
 
-import java.util.Arrays;
-
 import kronos.tasklist.TaskList;
 import kronos.tasks.Task;
 
@@ -10,10 +8,16 @@ import kronos.tasks.Task;
  */
 public class UntagCommand implements Command {
 
-    private final String request;
-    private final int taskNumber;
     private static final String ALL_KEYWORD = "#ALL";
 
+    private final String request;
+    private final int taskNumber;
+
+    /**
+     * Constructs an UntagCommand.
+     * @param request The full user input string.
+     * @param taskNumber The index of the task to untag.
+     */
     public UntagCommand(String request, int taskNumber) {
         this.request = request;
         this.taskNumber = taskNumber;
@@ -22,7 +26,7 @@ public class UntagCommand implements Command {
     /**
      * Removes 1 or all tags from a task.
      * @param taskList The list of tasks to modify.
-     * @return A formatted string showing the new tags
+     * @return A formatted string showing the new tags.
      */
     @Override
     public String execute(TaskList taskList) {
