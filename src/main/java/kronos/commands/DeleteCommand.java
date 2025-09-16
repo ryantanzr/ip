@@ -1,5 +1,6 @@
 package kronos.commands;
 
+import kronos.exceptions.KronosException;
 import kronos.tasklist.TaskList;
 import kronos.tasks.Task;
 
@@ -22,14 +23,14 @@ public class DeleteCommand implements Command {
      * Deletes a task from the storage.
      * @param taskList The list of tasks to modify.
      * @return A formatted string showing the removed task.
-     * @throws IndexOutOfBoundsException If the task number is invalid.
+     * @throws KronosException If the task number is invalid.
      */
     @Override
-    public String execute(TaskList taskList) throws IndexOutOfBoundsException {
+    public String execute(TaskList taskList) throws KronosException {
 
         // Check if the task number is valid
         if (taskNumber < 0 || taskNumber >= taskList.getAllTasks().size()) {
-            throw new IndexOutOfBoundsException("Invalid task number: " + (taskNumber + 1));
+            throw new KronosException("That task number is invalid!");
         }
 
         // Remove the task from the list

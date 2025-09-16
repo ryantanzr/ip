@@ -1,6 +1,7 @@
 package kronos;
 
 import kronos.commands.Command;
+import kronos.exceptions.KronosException;
 import kronos.parser.Parser;
 import kronos.storage.Storage;
 import kronos.tasklist.TaskList;
@@ -64,8 +65,8 @@ public class Kronos {
                 isExiting = true;
             }
 
-        } catch (Exception e) {
-            ui.showResponse("Error: " + e.getMessage());
+        } catch (KronosException e) {
+            ui.showError(e.getMessage());
         }
     }
 

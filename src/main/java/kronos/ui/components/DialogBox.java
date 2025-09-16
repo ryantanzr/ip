@@ -19,6 +19,10 @@ import javafx.scene.layout.HBox;
  * and a label containing text from the speaker.
  */
 public class DialogBox extends HBox {
+
+    private static final String ERROR_STYLE = "-fx-text-fill: red;\n"
+        + "-fx-font-weight: bold;";
+
     @FXML
     private Label dialog;
     @FXML
@@ -53,8 +57,15 @@ public class DialogBox extends HBox {
     }
 
     public static DialogBox getKronosResponse(String text, Image img) {
-        var db = new DialogBox(text, img);
-        db.flip();
-        return db;
+        var dialogBox = new DialogBox(text, img);
+        dialogBox.flip();
+        return dialogBox;
+    }
+
+    public static DialogBox getKronosErrorResponse(String errorText, Image img) {
+        var dialogBox = new DialogBox(errorText, img);
+        dialogBox.setStyle(ERROR_STYLE);
+        dialogBox.flip();
+        return dialogBox;
     }
 }

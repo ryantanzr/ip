@@ -3,6 +3,7 @@ package kronos.commands;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+import kronos.exceptions.KronosException;
 import kronos.tasklist.TaskList;
 import kronos.tasks.Deadline;
 import kronos.tasks.Event;
@@ -85,9 +86,9 @@ public class AddCommand implements Command {
      * Extracts the description, start date and end date from the user's request.
      * @param request The user's request string.
      * @return An array of size 3 containing the description, start date and end date.
-     * @throws NullPointerException If the description, start date or end date is missing.
+     * @throws KronosException If the description, start date or end date is missing.
      */
-    private String[] extractEventDetails(String request) throws NullPointerException {
+    private String[] extractEventDetails(String request) throws KronosException {
 
         // Split the request to get the description, start and end dates
         String[] eventComponents = request.split("/from|/to");
@@ -99,9 +100,9 @@ public class AddCommand implements Command {
 
         // Check for if the description, from or to date is missing
         if (eventComponents[0].trim().length() <= 6) {
-            throw new NullPointerException("Sir, you might have forgotten to add a description.");
+            throw new KronosException("Your description is missing!");
         } else if (eventComponents.length < 3 || eventComponents[1].isEmpty() || eventComponents[2].isEmpty()) {
-            throw new NullPointerException("Sir, you might have forgotten to add a start or end date.");
+            throw new KronosException("Your start or end date is missing!");
         }
 
         // Extract the start and end dates from the request
@@ -122,56 +123,59 @@ public class AddCommand implements Command {
      * Creates a new Task object based on the user's request.
      * @param taskList The task list to add the new task to.
      * @return A new Task object of the specified type.
-     * @throws IllegalArgumentException If the task type is not recognized.
-     * @throws NullPointerException If any of the required fields are missing.
-     * @throws DateTimeParseException If the date format is incorrect.
+     * @throws KronosException If any of the required fields are missing or incorrect.
      */
     @Override
-    public String execute(TaskList taskList) throws IllegalArgumentException,
-            NullPointerException, DateTimeParseException {
+    public String execute(TaskList taskList) throws KronosException {
 
         // Determine if the storage is full
         if (taskList.getAllTasks().size() >= MAX_SIZE) {
-            throw new IllegalArgumentException("Task storage is full, I cannot add more tasks.");
+            throw new KronosException("I can't store any more tasks!");
         }
 
         // Determine the task type based on the first word
         String description = "";
         Task newTask = null;
 
-        switch (taskType) {
-        case TODO:
+        try {
+            switch (taskType) {
+            case TODO:
 
-            // Extract the description from the request
-            description = extractToDoDescription(request);
+                // Extract the description from the request
+                description = extractToDoDescription(request);
 
-            newTask = new ToDo(description);
-            break;
-        case DEADLINE:
+                newTask = new ToDo(description);
+                break;
+            case DEADLINE:
 
-            // Extract the description and by date from the request
-            String[] deadlineComponents = extractDeadlineDetails(request);
+                // Extract the description and by date from the request
+                String[] deadlineComponents = extractDeadlineDetails(request);
 
-            // Parse the by date string into a LocalDate object
-            description = deadlineComponents[0];
-            LocalDate byDate = LocalDate.parse(deadlineComponents[1]);
+                // Parse the by date string into a LocalDate object
+                description = deadlineComponents[0];
+                LocalDate byDate = LocalDate.parse(deadlineComponents[1]);
 
-            newTask = new Deadline(description, byDate);
-            break;
-        case EVENT:
+                newTask = new Deadline(description, byDate);
+                break;
+            case EVENT:
 
-            // Extract the description, start and end dates from the request
-            String[] eventComponents = extractEventDetails(request);
+                // Extract the description, start and end dates from the request
+                String[] eventComponents = extractEventDetails(request);
 
-            // Parse the start and end date strings into LocalDate objects
-            description = eventComponents[0];
-            LocalDate startDate = LocalDate.parse(eventComponents[1]);
-            LocalDate endDate = LocalDate.parse(eventComponents[2]);
+                // Parse the start and end date strings into LocalDate objects
+                description = eventComponents[0];
+                LocalDate startDate = LocalDate.parse(eventComponents[1]);
+                LocalDate endDate = LocalDate.parse(eventComponents[2]);
 
-            newTask = new Event(description, startDate, endDate);
-            break;
-        default:
-            assert false : "Unexpected task type: " + taskType;
+                newTask = new Event(description, startDate, endDate);
+                break;
+            default:
+                assert false : "Unexpected task type: " + taskType;
+            }
+        } catch (DateTimeParseException e) {
+            throw new KronosException("The date format should be YYYY-MM-DD!");
+        } catch (NullPointerException e) {
+            throw new KronosException("There is some data missing! ");
         }
 
         // Add the new task to the list

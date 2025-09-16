@@ -1,5 +1,6 @@
 package kronos.commands;
 
+import kronos.exceptions.KronosException;
 import kronos.tasklist.TaskList;
 import kronos.tasks.Task;
 
@@ -29,7 +30,11 @@ public class UntagCommand implements Command {
      * @return A formatted string showing the new tags.
      */
     @Override
-    public String execute(TaskList taskList) {
+    public String execute(TaskList taskList) throws KronosException {
+
+        if (taskNumber < 0 || taskNumber >= taskList.getAllTasks().size()) {
+            throw new KronosException("That task number is invalid!");
+        }
 
         String responseString = "";
 
@@ -41,7 +46,7 @@ public class UntagCommand implements Command {
         } else {
             boolean isRemoved = task.removeTag(request);
             if (!isRemoved) {
-                throw new IllegalArgumentException("The tag '" + request + "' does not exist on this task.");
+                throw new KronosException("The tag '" + request + "' does not exist!");
             } else {
                 responseString = "Removed the tag: " + request + " from the task.";
             }

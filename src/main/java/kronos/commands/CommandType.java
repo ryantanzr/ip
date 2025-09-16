@@ -1,5 +1,7 @@
 package kronos.commands;
 
+import kronos.exceptions.KronosException;
+
 /**
  * Represents the different types of commands.
  */
@@ -18,9 +20,9 @@ public enum CommandType {
      * Converts a string keyword to its corresponding CommandType.
      * @param keyword The string representation of the command type.
      * @return The CommandType corresponding to the keyword.
-     * @throws IllegalArgumentException If the keyword does not match any CommandType.
+     * @throws KronosException If the keyword does not match any CommandType.
      */
-    public static CommandType fromString(String keyword) {
+    public static CommandType fromString(String keyword) throws KronosException {
         if (keyword.equals("todo") || keyword.equals("deadline") || keyword.equals("event")) {
             return ADD;
         } else if (keyword.equals("delete")) {
@@ -40,7 +42,7 @@ public enum CommandType {
         } else if (keyword.equals("untag")) {
             return UNTAG;
         } else {
-            throw new IllegalArgumentException("Sir what do you mean by: " + keyword + "?");
+            throw new KronosException("I can't help you with that command!");
         }
     }
 }

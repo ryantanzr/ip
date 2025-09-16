@@ -17,6 +17,14 @@ public class Ui {
     }
 
     /**
+     * Displays an error message to the user.
+     * @param errorMessage The error message to display.
+     */
+    public void showError(String errorMessage) {
+        mainWindow.showError(errorMessage);
+    }
+
+    /**
      * Sets the main window for the UI.
      * @param mainWindow The main window to set.
      */

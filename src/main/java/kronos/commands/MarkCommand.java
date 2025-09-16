@@ -1,5 +1,6 @@
 package kronos.commands;
 
+import kronos.exceptions.KronosException;
 import kronos.tasklist.TaskList;
 
 /**
@@ -19,7 +20,11 @@ public class MarkCommand implements Command {
      * @return A formatted string showing the new status and task description.
      */
     @Override
-    public String execute(TaskList taskList) {
+    public String execute(TaskList taskList) throws KronosException {
+
+        if (taskNumber < 0 || taskNumber >= taskList.getAllTasks().size()) {
+            throw new KronosException("That task number is invalid!");
+        }
 
         String responseString = "Marking that task as completed: \n";
 

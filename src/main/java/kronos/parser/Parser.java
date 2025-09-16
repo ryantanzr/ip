@@ -11,6 +11,7 @@ import kronos.commands.MarkCommand;
 import kronos.commands.TagCommand;
 import kronos.commands.UnmarkCommand;
 import kronos.commands.UntagCommand;
+import kronos.exceptions.KronosException;
 import kronos.tasks.TaskType;
 
 /**
@@ -25,7 +26,7 @@ public class Parser {
      * @param userInput The user input to parse.
      * @return The command corresponding to the user input.
      */
-    public Command parse(String userInput) {
+    public Command parse(String userInput) throws KronosException {
 
         String[] requestComponents = userInput.split(" ");
         String keyword = requestComponents[0];

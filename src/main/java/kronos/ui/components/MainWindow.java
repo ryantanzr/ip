@@ -42,6 +42,15 @@ public class MainWindow extends AnchorPane {
     }
 
     /**
+     * Displays an error message from Kronos in the dialog container.
+     */
+    public void showError(String errorMessage) {
+        dialogContainer.getChildren().add(
+                DialogBox.getKronosErrorResponse(errorMessage, kronosImage)
+        );
+    }
+
+    /**
      * Displays the response from Kronos in the dialog container.
      */
     public void showResponse(String message) {
