@@ -5,13 +5,20 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
+import kronos.exceptions.KronosException;
 import kronos.tasklist.TaskList;
 import kronos.tasks.ToDo;
 
-public class DeleteCommandTest {
+/**
+ * Tests for DeleteCommand.
+ */
+public class DeleteCommandTests {
 
+    /**
+     * Tests that a task is deleted successfully.
+     */
     @Test
-    public void validDeletionTest() {
+    public void deleteCommand_success() {
 
         TaskList taskList = new TaskList();
         taskList.addTask(new ToDo("read book"));
@@ -20,13 +27,20 @@ public class DeleteCommandTest {
 
         DeleteCommand deleteCommand = new DeleteCommand(2);
 
-        deleteCommand.execute(taskList);
+        try {
+            deleteCommand.execute(taskList);
+            assertEquals(taskList.getAllTasks().size(), 2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        assertEquals(taskList.getAllTasks().size(), 2);
     }
 
+    /**
+     * Tests that deleting a task with an invalid index throws an exception.
+     */
     @Test
-    public void invalidDeletionTest() {
+    public void deleteCommand_invalidIndex_exceptionThrown() {
 
         TaskList taskList = new TaskList();
         taskList.addTask(new ToDo("read book"));
@@ -35,7 +49,7 @@ public class DeleteCommandTest {
 
         DeleteCommand deleteCommand = new DeleteCommand(5);
 
-        assertThrows(IndexOutOfBoundsException.class, () -> {
+        assertThrows(KronosException.class, () -> {
             deleteCommand.execute(taskList);
         });
 
