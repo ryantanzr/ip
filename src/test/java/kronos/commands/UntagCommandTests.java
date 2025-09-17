@@ -110,7 +110,7 @@ public class UntagCommandTests {
 
             UntagCommand untagCommand = new UntagCommand("#ALL", 0);
             untagCommand.execute(taskList);
-            
+
         } catch (Exception e) {
             assert false; // This should not happen
         }
