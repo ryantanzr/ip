@@ -20,8 +20,7 @@ import javafx.scene.layout.HBox;
  */
 public class DialogBox extends HBox {
 
-    private static final String ERROR_STYLE = "-fx-text-fill: red;\n"
-        + "-fx-font-weight: bold;";
+    private static final String ERROR_STYLE = "-fx-font-weight: bold;";
 
     @FXML
     private Label dialog;
