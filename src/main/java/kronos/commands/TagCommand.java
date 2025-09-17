@@ -39,7 +39,8 @@ public class TagCommand implements Command {
         }
         for (String tag : tags) {
             if (!tag.matches(TAG_PATTERN)) {
-                throw new KronosException("Only alphanumeric characters and underscores are allowed!");
+                throw new KronosException("Add a # to the start and note "
+                    + "only alphanumeric characters and underscores are allowed!");
             }
         }
     }

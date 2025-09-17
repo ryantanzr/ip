@@ -21,7 +21,7 @@ public class UntagCommandTests {
         TaskList taskList = new TaskList();
         taskList.addTask(new ToDo("read book"));
         taskList.addTask(new ToDo("run"));
-        TagCommand tagCommand = new TagCommand("tag 1 urgent important", 1);
+        TagCommand tagCommand = new TagCommand("tag 1 #urgent #important", 1);
         tagCommand.execute(taskList);
         return taskList;
     }
@@ -35,13 +35,13 @@ public class UntagCommandTests {
         try {
             var taskList = setUpTaskList();
 
-            UntagCommand untagCommand = new UntagCommand("untag 1 urgent", 1);
+            UntagCommand untagCommand = new UntagCommand("#urgent", 1);
             untagCommand.execute(taskList);
 
             assert !taskList.getTask(1).getTags().contains("#urgent");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            assert false; // This should not happen
         }
     }
 
@@ -59,7 +59,7 @@ public class UntagCommandTests {
             assert taskList.getTask(1).getTags().isEmpty();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            assert false; // This should not happen
         }
     }
 
@@ -71,15 +71,14 @@ public class UntagCommandTests {
         try {
             var taskList = setUpTaskList();
 
-            UntagCommand untagCommand = new UntagCommand("untag 1 nonExistentTag", 1);
-            untagCommand.execute(taskList);
+            UntagCommand untagCommand = new UntagCommand("#nonExistentTag", 1);
 
             assertThrows(KronosException.class, () -> {
                 untagCommand.execute(taskList);
             });
 
         } catch (Exception e) {
-            e.printStackTrace();
+            assert false; // This should not happen
         }
     }
 
@@ -91,14 +90,13 @@ public class UntagCommandTests {
         try {
             var taskList = setUpTaskList();
 
-            UntagCommand untagCommand = new UntagCommand("untag 3 thisShouldBeOuttaBounds", 3);
-            untagCommand.execute(taskList);
+            UntagCommand untagCommand = new UntagCommand("#thisShouldBeOuttaBounds", 3);
 
             assertThrows(KronosException.class, () -> {
                 untagCommand.execute(taskList);
             });
         } catch (Exception e) {
-            e.printStackTrace();
+            assert false; // This should not happen
         }
     }
 
@@ -112,8 +110,9 @@ public class UntagCommandTests {
 
             UntagCommand untagCommand = new UntagCommand("#ALL", 0);
             untagCommand.execute(taskList);
+            
         } catch (Exception e) {
-            e.printStackTrace();
+            assert false; // This should not happen
         }
     }
 }

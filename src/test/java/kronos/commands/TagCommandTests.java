@@ -32,13 +32,13 @@ public class TagCommandTests {
 
         var taskList = setUpTaskList();
 
-        TagCommand tagCommand = new TagCommand("tag 1 urgent", 1);
+        TagCommand tagCommand = new TagCommand("tag 1 #urgent", 1);
 
         try {
             tagCommand.execute(taskList);
             assert taskList.getTask(1).getTags().contains("#urgent");
         } catch (Exception e) {
-            e.printStackTrace();
+            assert false; // This should not happen
         }
 
     }
@@ -51,14 +51,14 @@ public class TagCommandTests {
 
         var taskList = setUpTaskList();
 
-        TagCommand tagCommand = new TagCommand("tag 1 urgent important", 1);
+        TagCommand tagCommand = new TagCommand("tag 1 #urgent #important", 1);
 
         try {
             tagCommand.execute(taskList);
             assert taskList.getTask(1).getTags().contains("#urgent");
             assert taskList.getTask(1).getTags().contains("#important");
         } catch (Exception e) {
-            e.printStackTrace();
+            assert false; // This should not happen
         }
     }
 
@@ -70,7 +70,7 @@ public class TagCommandTests {
 
         var taskList = setUpTaskList();
 
-        TagCommand tagCommand = new TagCommand("tag 1 urgent123 important", 1);
+        TagCommand tagCommand = new TagCommand("tag 1 #urgent123 #important", 1);
 
         assertThrows(KronosException.class, () -> {
             tagCommand.execute(taskList);
@@ -85,7 +85,7 @@ public class TagCommandTests {
 
         var taskList = setUpTaskList();
 
-        TagCommand tagCommand = new TagCommand("tag 1 one two three fail", 1);
+        TagCommand tagCommand = new TagCommand("tag 1 #one #two #three #fail", 1);
 
         assertThrows(KronosException.class, () -> {
             tagCommand.execute(taskList);
